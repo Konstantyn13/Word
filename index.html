@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документ без назви - Kostiuk Word</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<header>
+    <div class="top-container">
+        <img src="https://www.gstatic.com/images/branding/product/1x/docs_2020q4_48dp.png" width="35" style="margin-right: 10px;">
+        <div class="info-col">
+            <div class="title-row">
+                <div class="doc-title" contenteditable="true" oninput="saveToLocalStorage()">Документ без назви</div>
+            </div>
+            <div class="menu-bar">
+                <div class="menu-item">
+                    File
+                    <div class="dropdown">
+                        <div class="dropdown-option" onclick="saveDoc()">Save file</div>
+                        <div class="dropdown-option" onclick="window.print()">Print (PDF)</div>
+                        <div class="dropdown-option" onclick="location.reload()">Download</div>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    Edit
+                    <div class="dropdown">
+                        <div class="dropdown-option" onclick="format('undo')">Undo</div>
+                        <div class="dropdown-option" onclick="format('redo')">Redo</div>
+                    </div>
+                </div>
+                <div class="menu-item">Reference</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button onclick="format('bold')">B</button>
+        <button onclick="format('italic')"><i>I</i></button>
+        <button onclick="format('underline')"><u>U</u></button>
+        <button onclick="format('insertUnorderedList')">Список</button>
+        <button onclick="format('justifyLeft')">⬅</button>
+        <button onclick="format('justifyCenter')">⬆</button>
+        <button onclick="format('justifyRight')">➡</button>
+
+        <div class="divider"></div>
+
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <label>Текст:</label>
+            <input type="color" id="textColor" oninput="format('foreColor', this.value)">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <label for="bgColor" style="font-size: 12px; font-weight: bold;">Фон:</label>
+            <input type="color" id="bgColor" value="#ffffff" onchange="format('hiliteColor', this.value)" title="Колір виділення">
+        </div>
+
+        <select id="googleFontSelector" onchange="applyFont(this.value)" style="width: 180px;">
+            <option value="Arial">Arial (стандартний)</option>
+            <optgroup label="Популярні Google Fonts">
+                <option value="Roboto">Roboto</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Lato">Lato</option>
+                <option value="Oswald">Oswald</option>
+                <option value="Playfair Display">Playfair Display</option>
+                <option value="Lora">Lora</option>
+                <option value="Noto Sans">Noto Sans</option>
+                <option value="Raleway">Raleway</option>
+                <option value="Ubuntu">Ubuntu</option>
+                <option value="Lobster">Lobster (Декоративний)</option>
+                <option value="Pacifico">Pacifico (Рукописний)</option>
+                <option value="Caveat">Caveat</option>
+            </optgroup>
+        </select>
+
+        <select id="fontSizeSelect" onchange="changeFontSize(this.value)" title="Розмір шрифту">
+            <option value="12px">12</option>
+            <option value="14px">14</option>
+            <option value="16px" selected>16</option>
+            <option value="18px">18</option>
+            <option value="24px">24</option>
+            <option value="30px">30</option>
+            <option value="36px">36</option>
+            <option value="48px">48</option>
+            <option value="60px">60</option>
+            <option value="72px">72</option>
+        </select>
+    </div>
+</header>
+
+<div class="main-content" id="pages-container">
+    <div class="page" contenteditable="true" id="page-1"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
