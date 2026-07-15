@@ -127,9 +127,15 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .toolbar button:hover { background: rgba(0,0,0,0.1); }
-
-       
+        .toolbar button:hover { 
+            background: rgba(0,0,0,0.1); 
+        }
+        .toolbar button.active {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            border-color: #1a73e8;
+            font-weight: bold;
+        }
         .main-content {
             flex: 1;
             overflow-y: auto;

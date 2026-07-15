@@ -1,6 +1,6 @@
 let savedRange = null;
 
-// Функція для запам'ятовування виділення тексту
+
 function saveSelection() {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
@@ -8,7 +8,7 @@ function saveSelection() {
     }
 }
 
-// Повертаємо виділення назад перед виконанням команд форматування
+
 function restoreSelection() {
     if (savedRange) {
         const selection = window.getSelection();
@@ -17,11 +17,11 @@ function restoreSelection() {
     }
 }
 
-// Слухаємо мишку і клавіатуру на сторінках для збереження виділення
+
 document.getElementById('pages-container').addEventListener('mouseup', saveSelection);
 document.getElementById('pages-container').addEventListener('keyup', saveSelection);
 
-// Форматування тексту (Жирний, Курсив тощо)
+
 function format(command, value = null) {
     restoreSelection(); 
     document.execCommand(command, false, value);
@@ -34,7 +34,7 @@ function format(command, value = null) {
     saveToLocalStorage();
 }
 
-// Збереження HTML файлу на комп'ютер
+
 function saveDoc() {
     const title = document.querySelector(".doc-title").innerText;
     const content = document.getElementById('pages-container').innerHTML;
@@ -46,17 +46,17 @@ function saveDoc() {
 }
 
 function applyFont(fontName) {
-    restoreSelection(); // Повертаємо фокус на виділений текст
+    restoreSelection(); 
     const selection = window.getSelection();
 
     if (selection.rangeCount > 0 && selection.toString().length > 0) {
         const range = selection.getRangeAt(0);
         
-        // Створюємо span із потрібним сімейством шрифтів
+ 
         const span = document.createElement("span");
         span.style.fontFamily = fontName;
 
-        // Підвантажуємо Google Font, якщо це не стандартний Arial
+      
         if (fontName !== "Arial") {
             const fontId = `font-${fontName.replace(/\s+/g, '-')}`;
             if (!document.getElementById(fontId)) {
@@ -68,11 +68,11 @@ function applyFont(fontName) {
             }
         }
 
-        // Огортаємо виділений текст у наш span
+ 
         span.appendChild(range.extractContents());
         range.insertNode(span);
     } else {
-        // Якщо текст не виділено, просто застосовуємо шрифт до всієї сторінки, де стоїть курсор
+
         const activePage = selection.anchorNode ? selection.anchorNode.parentElement.closest('.page') : null;
         if (activePage) {
             activePage.style.fontFamily = fontName;
@@ -81,20 +81,19 @@ function applyFont(fontName) {
     saveToLocalStorage();
 }
 
-// Виконання додаткових команд (наприклад, кольору тексту)
 function exec(command, value = null) {
     restoreSelection();
     document.execCommand(command, false, value);
     saveToLocalStorage();
 }
 
-// Розумне збереження в LocalStorage з очищенням порожніх сторінок
+
 function saveToLocalStorage() {
     const pagesContent = [];
     const pages = document.querySelectorAll('.page');
     
     pages.forEach((p, index) => {
-        // Якщо це не перша сторінка і вона абсолютно порожня (або містить лише пусті теги) — видаляємо її
+        
         const textContent = p.textContent.trim();
         const hasImages = p.querySelector('img') !== null;
         
@@ -114,7 +113,7 @@ function saveToLocalStorage() {
     console.log("Autosave Completed. Pages count: " + document.querySelectorAll('.page').length);
 }
 
-// Функція створення нової сторінки (тепер без різкого стрибка)
+
 function createNewPage() {
     const container = document.getElementById('pages-container');
     const pages = document.querySelectorAll('.page');
@@ -127,21 +126,21 @@ function createNewPage() {
     
     container.appendChild(newPage);
     
-    // Переносимо курсор на нову сторінку
+
     newPage.focus();
     
-    // Плавно підтягуємо екран до нової сторінки, щоб користувач бачив, де пише
+
     newPage.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
-// Оновлений слухач подій, який НЕ рухає екран при звичайному введенні
+
 document.getElementById('pages-container').addEventListener('input', (e) => {
     const currentPage = e.target.closest('.page');
     
     if (currentPage) {
-        // Перевіряємо, чи текст вийшов за межі поточної сторінки
+    
         if (currentPage.scrollHeight > currentPage.offsetHeight) {
-            // Перевіряємо, чи немає вже наступної сторінки
+
             const nextPage = currentPage.nextElementSibling;
             if (!nextPage || !nextPage.classList.contains('page')) {
                 createNewPage();
@@ -149,11 +148,11 @@ document.getElementById('pages-container').addEventListener('input', (e) => {
         }
     }
     
-    // Викликаємо збереження, але тепер воно не буде чіпати фокус і скрол
+
     saveToLocalStorage();
 });
 
-// Обробка зображень (Base64)
+
 function handleImage(file, targetPage) {
     if (!file.type.startsWith("image/")) return;
 
@@ -176,7 +175,7 @@ function handleImage(file, targetPage) {
     reader.readAsDataURL(file);
 }
 
-// Drag & Drop події
+
 const pagesContainer = document.getElementById("pages-container");
 pagesContainer.addEventListener('dragover', (e) => {
     e.preventDefault(); 
@@ -195,22 +194,22 @@ pagesContainer.addEventListener('drop', (e) => {
 });
 
 function changeFontSize(size) {
-    restoreSelection(); // Повертаємо фокус
+    restoreSelection(); 
     const selection = window.getSelection();
 
     if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         
         if (selection.toString().length > 0) {
-            // Створюємо span із чітким розміром у пікселях (наприклад, "16px")
+         
             const span = document.createElement("span");
             span.style.fontSize = size; 
             
-            // Вирізаємо виділений вміст і вставляємо всередину span
+         
             span.appendChild(range.extractContents());
             range.insertNode(span);
         } else {
-            // Якщо нічого не виділено, міняємо розмір за замовчуванням для всієї поточної сторінки
+
             const activePage = selection.anchorNode ? selection.anchorNode.parentElement.closest('.page') : null;
             if (activePage) {
                 activePage.style.fontSize = size;
@@ -220,7 +219,7 @@ function changeFontSize(size) {
     }
 }
 
-// Завантаження програми при старті (контроль однієї сторінки)
+
 window.onload = function() {
     const savedPages = JSON.parse(localStorage.getItem('myDocPages'));
     const savedTitle = localStorage.getItem('myDocTitle');
@@ -228,7 +227,7 @@ window.onload = function() {
 
     container.innerHTML = '';
 
-    // Перевіряємо, чи є збережені дані і чи вони не порожні
+
     if (savedPages && savedPages.length > 0) {
         savedPages.forEach((content, index) => {
             const p = document.createElement('div');
@@ -239,7 +238,7 @@ window.onload = function() {
             container.appendChild(p);
         });
     } else {
-        // Якщо збережень взагалі немає — створюється СУВОРО ОДНА сторінка
+  
         const firstPage = document.createElement('div');
         firstPage.className = 'page';
         firstPage.contentEditable = 'true';
@@ -254,3 +253,43 @@ window.onload = function() {
         document.title = "Документ без назви - Kostiuk Word";
     }
 };
+function updateToolbar() {
+    const btnBold = document.getElementById('btn-bold');
+    const btnItalic = document.getElementById('btn-italic');
+    const btnUnderline = document.getElementById('btn-underline');
+
+    
+    if (btnBold) {
+        if (document.queryCommandState("bold")) {
+            btnBold.classList.add("active");
+    }
+    else {
+        btnBold.classList.remove("active");
+    }
+}
+if (btnItalic) {
+    if (document.queryCommandState("italic")) {
+        btnItalic.classList.add("active");
+    } 
+    else {
+        btnItalic.classList.remove("active");
+    }
+}
+if (btnUnderline) {
+    if (document.queryCommandState("underline")) {
+        btnUnderline.classList.add("active");
+    } 
+    else {
+        btnUnderline.classList.remove("active");
+    }
+}
+ }
+
+ document.getElementById("pages-container").addEventListener("keyup", updateToolbar);
+document.getElementById("pages-container").addEventListener("mouseup", updateToolbar);
+
+document.querySelectorAll(".toolbar button").forEach(button => {
+    button.addEventListener('click', () => {
+        setTimeout(updateToolbar, 50);
+    });
+});
